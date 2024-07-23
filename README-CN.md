@@ -176,3 +176,42 @@ The source code is released under [GPLv3](http://www.gnu.org/licenses/) license.
 We are still working on improving the code reliability. For any technical issues, please contact Tong Qin <qintonguavATgmail.com>.
 
 For commercial inquiries, please contact Shaojie Shen <eeshaojieATust.hk>.
+
+---
+
+## 1. 替换光流算法为 LET-NET
+
+vins_estimator/src/featureTracker/feature_tracker.h
+
+开启： `#define LET_NET`
+
+使用原来的 vins-fusion 光流算法：注释掉即可。
+
+然后就可以跑以上的 数据集。
+
+### 3.1 Monocualr camera + IMU
+
+```
+    roslaunch vins vins_rviz.launch
+    rosrun vins vins_node /workspace/vins_fusion_ws/src/VINS-Fusion/config/custom/tunnel_mono_imu_config.yaml 
+    (optional) rosrun loop_fusion loop_fusion_node /workspace/vins_fusion_ws/src/VINS-Fusion/config/euroc/euroc_mono_imu_config.yaml 
+    rosbag play /workspace/datasets/beijing0613-6.bag
+```
+
+### 3.2 Stereo cameras + IMU
+
+```
+    roslaunch vins vins_rviz.launch
+    rosrun vins vins_node /workspace/vins_fusion_ws/src/VINS-Fusion/config/euroc/euroc_stereo_imu_config.yaml 
+    (optional) rosrun loop_fusion loop_fusion_node /workspace/vins_fusion_ws/src/VINS-Fusion/config/euroc/euroc_stereo_imu_config.yaml 
+    rosbag play /workspace/datasets/MH_01_easy.bag
+```
+
+### 3.3 Stereo cameras
+
+```
+    roslaunch vins vins_rviz.launch
+    rosrun vins vins_node /workspace/vins_fusion_ws/src/VINS-Fusion/config/euroc/euroc_stereo_config.yaml 
+    (optional) rosrun loop_fusion loop_fusion_node /workspace/vins_fusion_ws/src/VINS-Fusion/config/euroc/euroc_stereo_config.yaml 
+    rosbag play /workspace/datasets/MH_01_easy.bag
+```

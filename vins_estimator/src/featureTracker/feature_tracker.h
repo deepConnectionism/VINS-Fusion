@@ -25,6 +25,10 @@
 #include "../estimator/parameters.h"
 #include "../utility/tic_toc.h"
 
+// add
+#include "net.h"
+#define LET_NET
+
 using namespace std;
 using namespace camodocal;
 using namespace Eigen;
@@ -43,6 +47,17 @@ public:
     void showUndistortion(const string &name);
     void rejectWithF();
     void undistortedPoints();
+
+    void letFeaturesToTrack(cv::InputArray image,
+                            cv::OutputArray corners,
+                            int maxCorners,
+                            double qualityLevel,
+                            double minDistance,
+                            cv::InputArray mask, int blockSize=3);
+    void let_init();
+    cv::Mat let_net(const cv::Mat& image_bgr);
+    cv::Mat let_net_right(const cv::Mat& image_bgr);
+
     vector<cv::Point2f> undistortedPts(vector<cv::Point2f> &pts, camodocal::CameraPtr cam);
     vector<cv::Point2f> ptsVelocity(vector<int> &ids, vector<cv::Point2f> &pts, 
                                     map<int, cv::Point2f> &cur_id_pts, map<int, cv::Point2f> &prev_id_pts);
@@ -63,7 +78,7 @@ public:
     cv::Mat imTrack;
     cv::Mat mask;
     cv::Mat fisheye_mask;
-    cv::Mat prev_img, cur_img;
+    cv::Mat prev_img, cur_img, gray;
     vector<cv::Point2f> n_pts;
     vector<cv::Point2f> predict_pts;
     vector<cv::Point2f> predict_pts_debug;
@@ -81,4 +96,24 @@ public:
     bool stereo_cam;
     int n_id;
     bool hasPrediction;
+
+    // add
+    cv::Mat score;
+    cv::Mat desc;
+    cv::Mat last_desc;
+    const float mean_vals[3] = {0, 0, 0};
+    const float norm_vals[3] = {1.0/255.0, 1.0/255.0, 1.0/255.0};
+    const float mean_vals_inv[3] = {0, 0, 0};
+    const float norm_vals_inv[3] = {255.f, 255.f, 255.f};
+    ncnn::Net net;
+    ncnn::Mat in;
+    ncnn::Mat out1, out2;
+
+    const float mean_vals_gray[1] = {0};
+    const float norm_vals_gray[1] = {1.0/255.0};
+    const float mean_vals_inv_gray[1] = {0};
+    const float norm_vals_inv_gray[1] = {255.f};
 };
+
+
+

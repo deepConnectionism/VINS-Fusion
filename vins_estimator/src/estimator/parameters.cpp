@@ -45,6 +45,7 @@ int MIN_DIST;
 double F_THRESHOLD;
 int SHOW_TRACK;
 int FLOW_BACK;
+int EQUALIZE;
 
 
 template <typename T>
@@ -86,6 +87,7 @@ void readParameters(std::string config_file)
     F_THRESHOLD = fsSettings["F_threshold"];
     SHOW_TRACK = fsSettings["show_track"];
     FLOW_BACK = fsSettings["flow_back"];
+    EQUALIZE = fsSettings["equalize"];
 
     MULTIPLE_THREAD = fsSettings["multiple_thread"];
 

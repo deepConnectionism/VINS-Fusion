@@ -16,6 +16,9 @@ find_package(catkin REQUIRED COMPONENTS
     camera_models
     image_transport)
 
+set(ncnn_DIR "/root/ncnn/build/install/lib/cmake/ncnn" CACHE PATH "Directory that contains ncnnConfig.cmake")
+find_package(ncnn REQUIRED)
+
 find_package(OpenCV REQUIRED)
 
 # message(WARNING "OpenCV_VERSION: ${OpenCV_VERSION}")
@@ -50,7 +53,7 @@ add_library(vins_lib
     src/initial/initial_sfm.cpp
     src/initial/initial_ex_rotation.cpp
     src/featureTracker/feature_tracker.cpp)
-target_link_libraries(vins_lib ${catkin_LIBRARIES} ${OpenCV_LIBS} ${CERES_LIBRARIES})
+target_link_libraries(vins_lib ${catkin_LIBRARIES} ${OpenCV_LIBS} ${CERES_LIBRARIES} ncnn -fopenmp)
 
 
 add_executable(vins_node src/rosNodeTest.cpp)
