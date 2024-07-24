@@ -228,3 +228,4 @@ Green path is VIO odometry; blue path is odometry under GPS global fusion.
     rosrun global_fusion global_fusion_node
 ```
 
+注： 找不到 模块 global_fusion_node， 可以使用 `source devel/setup.bash` 解决。
