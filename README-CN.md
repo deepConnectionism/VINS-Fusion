@@ -181,7 +181,7 @@ For commercial inquiries, please contact Shaojie Shen <eeshaojieATust.hk>.
 
 ## 1. 替换光流算法为 LET-NET
 
-vins_estimator/src/featureTracker/feature_tracker.h
+在 [vins_estimator/src/featureTracker/feature_tracker.h](https://github.com/deepConnectionism/VINS-Fusion/blob/9c13caa8c624cea84060ba0b5063ee9cb83f551a/vins_estimator/src/featureTracker/feature_tracker.h#L30)
 
 开启： `#define LET_NET`
 
