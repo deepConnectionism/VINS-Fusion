@@ -78,7 +78,7 @@ public:
     cv::Mat imTrack;
     cv::Mat mask;
     cv::Mat fisheye_mask;
-    cv::Mat prev_img, cur_img, gray;
+    cv::Mat prev_img, cur_img, rightImg, gray, grayRight;
     vector<cv::Point2f> n_pts;
     vector<cv::Point2f> predict_pts;
     vector<cv::Point2f> predict_pts_debug;
@@ -99,7 +99,7 @@ public:
 
     // add
     cv::Mat score;
-    cv::Mat desc;
+    cv::Mat desc, rightDesc;
     cv::Mat last_desc;
     const float mean_vals[3] = {0, 0, 0};
     const float norm_vals[3] = {1.0/255.0, 1.0/255.0, 1.0/255.0};

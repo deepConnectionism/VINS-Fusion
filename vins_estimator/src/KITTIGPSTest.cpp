@@ -20,6 +20,8 @@
 #include "estimator/estimator.h"
 #include "utility/visualization.h"
 
+#include "featureTracker/feature_tracker.h"
+
 using namespace std;
 using namespace Eigen;
 
@@ -119,8 +121,13 @@ int main(int argc, char** argv)
 			printf("%s\n", leftImagePath.c_str() );
 			printf("%s\n", rightImagePath.c_str() );
 
-			imLeft = cv::imread(leftImagePath, CV_LOAD_IMAGE_GRAYSCALE );
-			imRight = cv::imread(rightImagePath, CV_LOAD_IMAGE_GRAYSCALE );
+			#ifdef LET_NET
+				imLeft = cv::imread(leftImagePath);
+				imRight = cv::imread(rightImagePath);
+			#else
+				imLeft = cv::imread(leftImagePath, CV_LOAD_IMAGE_GRAYSCALE);
+				imRight = cv::imread(rightImagePath, CV_LOAD_IMAGE_GRAYSCALE);
+			#endif
 
 			double imgTime = imageTimeList[i] - baseTime;
 

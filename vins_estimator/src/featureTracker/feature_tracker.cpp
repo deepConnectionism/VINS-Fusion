@@ -62,7 +62,10 @@ FeatureTracker::FeatureTracker()
     n_id = 0;
     hasPrediction = false;
     #ifdef LET_NET
+        printf("Using LET-Net feature tracker\n");
         let_init(); // 初始化 LET-Net 模型。
+    #else
+        printf("Using Oringal feature tracker\n");
     #endif
 }
 
@@ -114,19 +117,38 @@ map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> FeatureTracker::trackIm
     cur_img = _img;
     row = cur_img.rows;
     col = cur_img.cols;
-    cv::Mat rightImg = _img1;
-
+    if(!_img1.empty() && stereo_cam)
+    {
+        rightImg = _img1;
+    }
+    
     #ifdef LET_NET
-        if (EQUALIZE)
+        // if (EQUALIZE)
+        // {
+        //     // 使用 CLAHE 对图像进行直方图均衡化。
+        //     cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0, cv::Size(8, 8));
+        //     TicToc t_c; // 用于记录 CLAHE 操作的时间
+        //     clahe->apply(cur_img, cur_img);
+
+        //     if(!_img1.empty() && stereo_cam)
+        //     {
+        //         clahe->apply(rightImg, rightImg);
+        //     }
+        //     ROS_DEBUG("CLAHE costs: %fms", t_c.toc());
+        // }
+
+        if(!_img1.empty() && stereo_cam)
         {
-            // 使用 CLAHE 对图像进行直方图均衡化。
-            cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0, cv::Size(8, 8));
-            TicToc t_c; // 用于记录 CLAHE 操作的时间
-            clahe->apply(cur_img, cur_img);
-            ROS_DEBUG("CLAHE costs: %fms", t_c.toc());
+            desc = let_net(cur_img); // 调用 LET-Net 进行特征点检测和描述。 左目
+            rightDesc = let_net_right(rightImg);
+            cv::cvtColor(cur_img, gray, cv::COLOR_BGR2GRAY); // 将图像转换为灰度图像。
+            cv::cvtColor(rightImg, grayRight, cv::COLOR_BGR2GRAY);
         }
-        desc = let_net(cur_img); // 调用 LET-Net 进行特征点检测和描述。 左目
-        cv::cvtColor(cur_img, gray, cv::COLOR_BGR2GRAY); // 将图像转换为灰度图像。
+        else
+        {
+            desc = let_net(cur_img);
+            cv::cvtColor(cur_img, gray, cv::COLOR_BGR2GRAY);
+        }
     #endif
 
     cur_pts.clear();
@@ -411,10 +433,7 @@ map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> FeatureTracker::trackIm
 
             #ifdef LET_NET
                 std::vector<cv::Point2f> cornersL, cornersR;
-                cv::Mat rightDesc = let_net_right(rightImg);
-                cv::Mat grayRight;
-                cv::cvtColor(rightImg, grayRight, cv::COLOR_BGR2GRAY);
-
+            
                 cornersL.resize(cur_pts.size()); 
                 for (int i = 0; i < int(cur_pts.size()); i++)
                 {
@@ -694,10 +713,6 @@ void FeatureTracker::drawTrack(const cv::Mat &imLeft, const cv::Mat &imRight,
     else
         imTrack = imLeft.clone();
 
-    #ifndef LET_NET 
-        cv::cvtColor(imTrack, imTrack, CV_GRAY2RGB);
-    #endif
-        
     for (size_t j = 0; j < curLeftPts.size(); j++)
     {
         double len = std::min(1.0, 1.0 * track_cnt[j] / 20);

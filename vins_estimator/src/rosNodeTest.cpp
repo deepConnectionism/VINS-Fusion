@@ -54,22 +54,22 @@ cv::Mat getImageFromMsg(const sensor_msgs::ImageConstPtr &img_msg)
         // cout << "img_msg->encoding: " << img_msg->encoding << endl; // mono8
         ptr = cv_bridge::toCvCopy(img_msg, sensor_msgs::image_encodings::BGR8); // 因为 LET_NET 模型需要 RGB 图像，所以这里使用 BGR8 编码。
     #else // 单通道
+    {
+        if (img_msg->encoding == "8UC1")
         {
-            if (img_msg->encoding == "8UC1")
-            {
-                sensor_msgs::Image img;
-                img.header = img_msg->header;
-                img.height = img_msg->height;
-                img.width = img_msg->width;
-                img.is_bigendian = img_msg->is_bigendian;
-                img.step = img_msg->step;
-                img.data = img_msg->data;
-                img.encoding = "mono8";
-                ptr = cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::MONO8);
-            }
-            else
-                ptr = cv_bridge::toCvCopy(img_msg, sensor_msgs::image_encodings::MONO8);
+            sensor_msgs::Image img;
+            img.header = img_msg->header;
+            img.height = img_msg->height;
+            img.width = img_msg->width;
+            img.is_bigendian = img_msg->is_bigendian;
+            img.step = img_msg->step;
+            img.data = img_msg->data;
+            img.encoding = "mono8";
+            ptr = cv_bridge::toCvCopy(img, sensor_msgs::image_encodings::MONO8);
         }
+        else
+            ptr = cv_bridge::toCvCopy(img_msg, sensor_msgs::image_encodings::MONO8);
+    }
     #endif
 
     cv::Mat img = ptr->image.clone();
