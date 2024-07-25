@@ -301,9 +301,9 @@ map<int, vector<pair<int, Eigen::Matrix<double, 7, 1>>>> FeatureTracker::trackIm
 
             #ifdef LET_NET
                 vector<cv::Point2f> reverse_pts = corners1;
-                cv::calcOpticalFlowPyrLK(desc, last_desc, corners2, reverse_pts, reverse_status, err, cv::Size(21, 21), 1,
-                                        cv::TermCriteria(cv::TermCriteria::COUNT+cv::TermCriteria::EPS, 30, 0.01), 
-                                        cv::OPTFLOW_USE_INITIAL_FLOW);
+                cv::calcOpticalFlowPyrLK(desc, last_desc, corners2, reverse_pts, reverse_status, err, cv::Size(21, 21), 1);
+                                        // cv::TermCriteria(cv::TermCriteria::COUNT+cv::TermCriteria::EPS, 30, 0.01), 
+                                        // cv::OPTFLOW_USE_INITIAL_FLOW);
 
                   for(size_t i = 0; i < status.size(); i++)
                 {
