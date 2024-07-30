@@ -224,8 +224,9 @@ Open three terminals, run vins, global fusion and rviz respectively.
 Green path is VIO odometry; blue path is odometry under GPS global fusion.
 ```
     roslaunch vins vins_rviz.launch
-    rosrun vins kitti_gps_test ./src/VINS-Fusion/config/kitti_raw/kitti_10_03_config.yaml  /workspace/datasets/KITTI/2011_10_03/2011_10_03_drive_0027_sync/
     rosrun global_fusion global_fusion_node
+    rosrun vins kitti_gps_test ./src/VINS-Fusion/config/kitti_raw/kitti_10_03_config.yaml  /workspace/datasets/KITTI/2011_10_03/2011_10_03_drive_0027_sync/
+    
 ```
 
 注： 找不到 模块 global_fusion_node， 可以使用 `source devel/setup.bash` 解决。
